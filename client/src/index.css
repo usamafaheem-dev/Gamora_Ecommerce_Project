@@ -1,0 +1,448 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------- */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", serif;
+  background-color: #f4f4f4;
+}
+
+/* ----------------------------- */
+body::-webkit-scrollbar {
+  display: none !important;
+}
+
+.error-text {
+  color: red;
+}
+
+.ant-otp-input {
+  background-color: #eff1f1;
+}
+
+.ant-btn-variant-outlined:not(:disabled):not(.ant-btn-disabled):active {
+  background-color: #42A4D8;
+}
+
+.nav-tab a.active {
+  background-color: #23bc96;
+  color: white;
+}
+
+.phone-input input {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid #d9d9d9;
+  padding: 0.5rem;
+  font-size: 1rem;
+  color: #000;
+  background-color: #ececec0a;
+  transition: all 0.3s ease;
+
+  &:focus {
+    border-color: #42A4D8;
+    box-shadow: 0 0 0 2px rgba(66, 164, 216, 0.2);
+  }
+
+  &:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+  }
+
+  &:placeholder {
+    color: #6c757d;
+  }
+
+  &:hover {
+    border-color: #42A4D8;
+  }
+
+  &:active {
+    border-color: #42A4D8;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-within {
+    border-color: #42A4D8;
+    box-shadow: 0 0 0 2px rgba(66, 164, 216, 0.2);
+  }
+
+  &:focus-within:placeholder-shown {
+    border-color: #42A4D8;
+    box-shadow: 0 0 0 2px rgba(66, 164, 216, 0.2);
+  }
+
+  &:focus-within:placeholder-shown:focus {
+    border-color: #42A4D8;
+    box-shadow: 0 0 0 2px rgba(66, 164, 216, 0.2);
+  }
+}
+
+.special-label {
+  padding-bottom: 8px;
+}
+
+.ant-dropdown-menu-item-icon {
+  font-size: 20px !important;
+}
+
+.ant-dropdown-menu-title-content {
+  font-weight: 500;
+}
+
+.modal-scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: calc(100vh - 300px);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(59 130 246 / var(--tw-bg-opacity, 1));
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #635e5e;
+}
+
+::-webkit-scrollbar-corner {
+  background: #f1f1f1;
+}
+
+.hero-img {
+  background-image: url(/assets/new-man-shirts-and-polos-on-sale.jpg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+}
+
+.swiper-slide {
+  height: auto !important;
+}
+
+.ant-modal-title {
+  color: #000;
+  font-size: 32px !important;
+  font-weight: 700;
+}
+
+.main-modal label {
+  color: #000;
+  font-size: 14px !important;
+  font-weight: 500;
+}
+
+.main-modal .ant-select-arrow {
+  color: #000000;
+  font-size: 16px;
+}
+
+.main-modal .ant-input, .ant-select, .ant-input-affix-wrapper {
+  height: 40px !important;
+  border-radius: 8px !important;
+}
+
+.main-modal .textarea {
+  height: 100px !important;
+  border-radius: 8px !important;
+  resize: none;
+}
+
+.main-modal .ant-select-selector {
+  border-radius: 8px !important;
+
+}
+
+.state-select {
+  height: 30px !important;
+}
+
+.main-modal .ant-input-affix-wrapper .ant-input {
+  height: auto !important;
+}
+
+.main-container {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: calc(100vh - 90px);
+}
+
+.main-container::-webkit-scrollbar {
+  display: none;
+}
+
+.ant-table-thead tr th {
+  background-color: transparent !important;
+  border-radius: 0px !important;
+  font-size: 16px !important;
+  font-weight: 510 !important;
+  color: #09090a !important;
+}
+
+.ant-table-thead>tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before,
+:where(.css-dev-only-do-not-override-ccdg5a).ant-table-wrapper .ant-table-thead>tr>td:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+  display: none !important;
+}
+
+.ant-table-wrapper {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.custom-table .ant-table-container table {
+  border-spacing: 0 8px;
+  border-collapse: separate;
+}
+
+.ant-table-tbody>tr {
+  outline: 1px solid #e8e8e8 !important;
+  border-radius: 5px !important;
+}
+
+.ant-table-tbody>tr:hover {
+  outline: 1px solid #e8e8e8 !important;
+  border-radius: 5px !important;
+}
+
+.ant-table-tbody>tr>td {
+  /* border: none !important; */
+}
+
+.ant-table-thead>tr>th {
+  border: none !important;
+
+}
+
+.center-column .ant-table-cell {
+  text-align: center !important;
+}
+
+.center-column {
+  text-align: center !important;
+}
+
+/* Make sure the table fills the container */
+.custom-table .ant-table {}
+
+.custom-table .ant-table-tbody>tr>td a {}
+
+.ant-table {}
+
+.ant-table-wrapper {
+
+  overflow-x: auto;
+}
+
+.custom-table .ant-table-container {
+  overflow-x: auto;
+}
+
+/* Adjust font size and paddings for smaller screens */
+.ant-table-thead th,
+.ant-table-tbody td {
+  font-size: 14px !important;
+  padding: 8px !important;
+  font-weight: 500 !important;
+  color: #6c757d;
+}
+
+/* Ensure table headings and cells stay aligned */
+.custom-table .ant-table-thead>tr>th,
+.custom-table .ant-table-tbody>tr>td {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* Prevent table overflow on smaller screens */
+.custom-table .ant-table-container table {
+  display: block;
+}
+
+/* Center actions column for smaller screens */
+.ant-table-thead .center-column th,
+.ant-table-tbody .center-column td {
+  text-align: center !important;
+}
+
+.product-table {
+  background-color: #fff;
+  border-radius: 8px !important;
+}
+
+.ant-table-content {
+  padding: 0px 20px !important;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 150px;
+  text-align: center;
+}
+
+.ant-table-container table {
+  border-spacing: 0 8px;
+  border-collapse: separate;
+}
+
+.ant-descriptions-item-label {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+.ant-select-multiple .ant-select-selection-wrap {
+  align-self: center !important;
+}
+
+.product-table .ant-pagination {
+  padding: 0px 20px !important;
+}
+
+.ant-pagination-item-active a {
+  /* background-color: #42A4D8 !important; */
+  /* color: white !important; */
+
+  border-color: transparent !important;
+  border-radius: 4px !important;
+}
+
+
+.ant-breadcrumb ol {
+  align-items: center !important;
+}
+
+.home-container::-webkit-scrollbar {
+  display: none !important;
+}
+
+.ant-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.swiper {
+  padding: 30px 0px !important;
+}
+
+.ant-table-measure-row {
+  display: none !important;
+}
+
+.ant-table-wrapper .ant-table {
+  scrollbar-color: rgb(15, 23, 42) rgba(255, 255, 255, 0.06) !important;
+
+}
+
+.sidebar-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: calc(100vh - 180px);
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* .mobile-menu-drawer .ant-drawer {
+  display: none !important;
+} */
+
+@media (max-width: 1440px) {
+  .modal-scroll {
+    height: calc(100vh - 158px);
+  }
+}
+
+@media (max-width: 767px) {
+  .ant-table {
+    width: 100%;
+  }
+
+  .ant-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+
+
+  /* Adjust font size and paddings for smaller screens */
+  .ant-table-thead th,
+  .ant-table-tbody td {
+    font-size: 12px !important;
+    padding: 8px !important;
+  }
+
+  /* Ensure table headings and cells stay aligned */
+  .customs-table .ant-table-thead>tr>th,
+  .customs-table .ant-table-tbody>tr>td {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+
+
+  /* Center actions column for smaller screens */
+  .ant-table-thead .center-column th,
+  .ant-table-tbody .center-column td {
+    text-align: center !important;
+  }
+
+  .hero-img {
+    background-image: url(/assets/lama-retail-summer-sale-on-shirts-for-mn.webp);
+    height: 70vh;
+  }
+
+  .modal-scroll {
+    height: calc(100vh - 390px);
+  }
+
+  /* .ant-drawer {
+    display: block !important;
+  } */
+
+  .ant-drawer-header-title {
+    flex-direction: row-reverse !important;
+  }
+
+  .ant-drawer-content-wrapper {
+    width: 100% !important;
+
+  }
+  .ant-modal-title{
+    font-size: 18px !important;
+  }
+}
