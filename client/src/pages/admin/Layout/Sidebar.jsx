@@ -4,6 +4,7 @@ import { Shirt } from 'lucide-react';
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import api from '../../../utils/api';
 
 const Sidebar = ({ isSidebarVisible, toggleSidebar }) => {
     const navigate = useNavigate();
@@ -25,7 +26,7 @@ const Sidebar = ({ isSidebarVisible, toggleSidebar }) => {
 
     const handleLogout = async () => {
         try {
-            await axios.post('http://localhost:5000/api/auth/logout', {}, {
+            await api.post('/auth/logout', {}, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
             });
             localStorage.removeItem('token');

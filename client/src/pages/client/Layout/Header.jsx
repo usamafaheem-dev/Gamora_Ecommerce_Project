@@ -7,6 +7,7 @@ import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { StoreUse } from '../../../components';
 import { AuthContext } from '../../../routes/AuthProvider';
+import api from '../../../utils/api';
 
 const Header = () => {
   const { cart, favorites, setCartOpen, setWishlistOpen, notifications, setNotificationOpen, fetchNotifications } = StoreUse();
@@ -21,7 +22,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:5000/api/auth/logout', {}, {
+      await api.post('/auth/logout', {}, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       localStorage.removeItem('token');
@@ -77,7 +78,7 @@ const Header = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const profileResponse = await axios.get('http://localhost:5000/api/profile', {
+        const profileResponse = await api.get('/profile', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         setProfile(profileResponse.data.profile);

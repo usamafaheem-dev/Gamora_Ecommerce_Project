@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Card, Table, Badge, Button, Input, Select, Modal, Image, Divider, message, Spin } from 'antd';
 import { Search, Eye, Package, MapPin, CreditCard, Phone, Mail, Calendar, Filter } from 'lucide-react';
 import axios from 'axios';
+import api from '../../../utils/api';
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -22,7 +23,7 @@ const ManageOrders = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/orders/admin/all', {
+      const response = await api.get('/orders/admin/all', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setOrders(response.data.data || []);
@@ -36,7 +37,7 @@ const ManageOrders = () => {
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      await axios.put(`http://localhost:5000/api/orders/admin/${orderId}/status`, 
+      await api.put(`/orders/admin/${orderId}/status`, 
         { status: newStatus }, 
         {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }

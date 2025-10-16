@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
+import api from '../utils/api';
 
 const ProtectedRoute = ({ role }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -16,7 +17,7 @@ const ProtectedRoute = ({ role }) => {
       }
 
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/verify', {
+        const response = await api.get('/api/auth/verify', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setIsAuthenticated(true);

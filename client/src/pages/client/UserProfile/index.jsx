@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Camera, Edit2, Trash2, User, Phone, MapPin, Save, X, Upload, Check, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import api from '../../../utils/api';
 
 const ProfileCard = () => {
   const [form, setForm] = useState({
@@ -33,7 +34,7 @@ const ProfileCard = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/profile', {
+        const response = await api.get('/profile', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         const profile = response.data.profile;
@@ -147,7 +148,7 @@ const ProfileCard = () => {
         formData.append('profileImage', imageFile);
       }
 
-      const response = await axios.put('http://localhost:5000/api/profile', formData, {
+      const response = await api.put('/profile', formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'multipart/form-data',
@@ -195,7 +196,7 @@ const ProfileCard = () => {
 
     setLoading(true);
     try {
-      await axios.delete('http://localhost:5000/api/profile', {
+      await api.delete('/profile', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setProfileData(null);

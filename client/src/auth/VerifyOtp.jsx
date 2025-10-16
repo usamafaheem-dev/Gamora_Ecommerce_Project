@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import api from '../utils/api';
 const { OTP } = Input;
 
 const VerifyOtp = () => {
@@ -25,7 +26,7 @@ const VerifyOtp = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/verify-otp', {
+      const response = await api.post('/auth/verify-otp', {
         email,
         otp
       });

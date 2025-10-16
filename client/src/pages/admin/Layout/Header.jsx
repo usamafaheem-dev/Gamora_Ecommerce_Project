@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Menu } from 'lucide-react';
+import api from '../../../utils/api';
 
 const Header = ({ toggleSidebar }) => {
   const [profile, setProfile] = useState(null);
@@ -14,7 +15,7 @@ const Header = ({ toggleSidebar }) => {
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/api/profile', {
+        const response = await api.get('/profile', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         setProfile(response.data.profile);

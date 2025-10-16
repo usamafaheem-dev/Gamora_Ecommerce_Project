@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import axios from 'axios';
+import api from '../utils/api';
 
 const AuthRoute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -15,7 +16,7 @@ const AuthRoute = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/verify', {
+        const response = await api.get('/auth/verify', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setIsAuthenticated(true);

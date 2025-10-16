@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import api from '../utils/api';
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -52,7 +53,7 @@ const Login = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      const response = await api.post('auth/login', formData);
       localStorage.setItem('token', response.data.token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
       toast.success(response.data.message);

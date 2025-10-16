@@ -4,6 +4,7 @@ import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { CreateModal, ViewModal } from '../../../components/common';
+import api from '../../../utils/api';
 
 const Women = () => {
   const [products, setProducts] = useState([]);
@@ -14,7 +15,7 @@ const Women = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/products');
+      const response = await api.get('/products');
       setProducts(response.data);
     } catch {
       toast.error('Error fetching products');
@@ -40,7 +41,7 @@ const Women = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/products/${id}`);
+      await api.delete(`/products/${id}`);
       setProducts(products.filter(product => product._id !== id));
       toast.success('Product deleted successfully');
     } catch {

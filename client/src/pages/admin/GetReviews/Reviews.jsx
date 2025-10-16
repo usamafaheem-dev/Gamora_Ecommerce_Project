@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Input, Button, Modal, Form, Rate, Spin, message, Avatar } from 'antd';
 import axios from 'axios';
+import api from '../../../utils/api';
 
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -14,7 +15,7 @@ const Reviews = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/reviews/admin/all', {
+      const res = await api.get('/reviews/admin/all', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setReviews(res.data.reviews || []);
@@ -39,7 +40,7 @@ const Reviews = () => {
     setSubmitting(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/reviews/admin/${selectedReview._id}/reply`, {
+      await api.put(`/api/reviews/admin/${selectedReview._id}/reply`, {
         reply
       }, {
         headers: { Authorization: `Bearer ${token}` }

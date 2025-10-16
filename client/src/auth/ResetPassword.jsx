@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import api from '../utils/api';
 
 const ResetPassword = () => {
   const [loading, setLoading] = useState(false);
@@ -64,7 +65,7 @@ const ResetPassword = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/reset-password', {
+      const response = await api.post('/reset-password', {
         email,
         password,
         token: resetToken,

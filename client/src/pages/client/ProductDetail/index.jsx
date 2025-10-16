@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Layout, Breadcrumb, Button, Rate, Radio, Tabs, Divider, Row, Col, Spin, Typography } from 'antd';
 import { ChevronRight, Home, Tag, ShoppingCart, ArrowLeft, Heart } from 'lucide-react';
 import { StoreUse } from '../../../components';
-import { productsAPI } from '../../../utils/api';
+import api, { productsAPI } from '../../../utils/api';
 import { toast } from 'react-toastify';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import axios from 'axios';
@@ -79,7 +79,7 @@ const ProductDetailsPage = () => {
         const relatedWithReviews = await Promise.all(
           filteredRelated.map(async (prod) => {
             try {
-              const res = await axios.get(`http://localhost:5000/api/reviews/product/${prod._id}`);
+              const res = await api.get(`/reviews/product/${prod._id}`);
               const reviews = res.data.reviews || [];
               const reviewCount = reviews.length;
               const reviewAvg = reviewCount > 0
@@ -112,7 +112,7 @@ const ProductDetailsPage = () => {
     const fetchReviews = async () => {
       try {
         setReviewLoading(true);
-        const res = await axios.get(`http://localhost:5000/api/reviews/product/${id}`);
+        const res = await api.get(`/reviews/product/${id}`);
         setReviews(res.data.reviews || []);
       } catch {
         setReviews([]);
@@ -129,10 +129,10 @@ const ProductDetailsPage = () => {
       try {
         const token = localStorage.getItem('token');
         if (!token) return;
-        const profileRes = await axios.get('http://localhost:5000/api/profile', {
+        const profileRes = await api.get('/profile', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const ordersRes = await axios.get('http://localhost:5000/api/orders/user', {
+        const ordersRes = await api.get('/orders/user', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const deliveredOrder = (ordersRes.data.data || []).find(
@@ -202,8 +202,8 @@ const ProductDetailsPage = () => {
     setSubmitting(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.post(
-        'http://localhost:5000/api/reviews',
+      await api.post(
+        '/reviews',
         {
           productId: id,
           orderId: userOrderId,
@@ -214,7 +214,7 @@ const ProductDetailsPage = () => {
       );
       toast.success('Review submitted!');
       form.resetFields();
-      const res = await axios.get(`http://localhost:5000/api/reviews/product/${id}`);
+      const res = await api.get(`/reviews/product/${id}`);
       setReviews(res.data.reviews || []);
       setUserCanReview(false);
     } catch (e) {

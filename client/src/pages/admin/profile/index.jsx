@@ -4,6 +4,7 @@ import { Camera, Edit2, Trash2, User, Phone, MapPin, Save, X, Upload, Check, Ale
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import axios from 'axios';
+import api from '../../../utils/api';
 
 const AdminProfile = () => {
   const [form, setForm] = useState({
@@ -37,7 +38,7 @@ const AdminProfile = () => {
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/api/profile', {
+        const response = await api.get('/profile', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         const profile = response.data.profile;
@@ -153,7 +154,7 @@ const AdminProfile = () => {
         formData.append('profileImage', imageFile);
       }
 
-      const response = await axios.put('http://localhost:5000/api/profile', formData, {
+      const response = await api.put('/profile', formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'multipart/form-data',
@@ -201,7 +202,7 @@ const AdminProfile = () => {
 
     setLoading(true);
     try {
-      await axios.delete('http://localhost:5000/api/profile', {
+      await api.delete('/profile', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setProfileData(null);

@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import api from '../utils/api'
 
 const Signup = () => {
   const [loading, setLoading] = useState(false);
@@ -57,7 +58,7 @@ const Signup = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/signup', formData);
+      const response = await api.post('/auth/signup', formData);
       // Handle success with a proper success message
       const successMessage = response.data.message || 'Registration successful!';
 
