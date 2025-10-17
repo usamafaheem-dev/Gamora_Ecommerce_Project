@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import { productsAPI } from "../../../utils/api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const FeaturedWomen = () => {
   const [products, setProducts] = useState([]);
@@ -58,11 +58,11 @@ const FeaturedWomen = () => {
     if (sub.includes("shoe")) return subcategoryRoutes.shoes;
     return "/women";
   };
-
+ const navigate= useNavigate();
   const handleProductClick = (product) => {
-    window.location.href = getSubcategoryRoute(product.subcategory);
+    const route = getSubcategoryRoute(product.subcategory);
+    navigate(route); // React Router client-side navigation
   };
-
   return (
     <>
       {/* Banner Section */}
