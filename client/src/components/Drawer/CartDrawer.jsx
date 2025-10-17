@@ -85,10 +85,15 @@ const CartDrawer = () => {
                   className="flex gap-4 border-b pb-4 hover:bg-gray-50 rounded-lg transition-all duration-300 p-2"
                 >
                   <img
-                    src={`http://localhost:5000${item.images[0]}`}
+                    src={
+                      item.images[0].startsWith("http")
+                        ? item.images[0]
+                        : `http://localhost:5000${item.images[0]}`
+                    }
                     alt={item.name}
                     className="w-20 h-20 object-cover rounded-lg border"
                   />
+
                   <div className="flex-grow flex flex-col justify-between">
                     <div>
                       <h3 className="font-semibold text-gray-800 leading-tight">

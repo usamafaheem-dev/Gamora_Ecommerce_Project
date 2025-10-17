@@ -20,7 +20,6 @@ import { AuthContext } from "../../../routes/AuthProvider";
 import api from "../../../utils/api";
 
 const Header = () => {
-
   const {
     cart,
     favorites,
@@ -279,7 +278,7 @@ const Header = () => {
                     <img
                       src={
                         profile?.profileImage
-                          ? profile.profileImage
+                          ? profile.profileImage // direct Cloudinary URL
                           : "/img/default-profile.png"
                       }
                       alt="Profile"
@@ -373,9 +372,7 @@ const Header = () => {
                 <img
                   src={
                     profile?.profileImage
-                      ? profile.profileImage.startsWith("http")
-                        ? profile.profileImage
-                        : `http://localhost:5000${profile.profileImage}`
+                      ? profile.profileImage // direct Cloudinary URL
                       : "/img/default-profile.png"
                   }
                   alt="Profile"

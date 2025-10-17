@@ -1,11 +1,18 @@
-import React from 'react';
-import { Modal, Button } from 'antd';
-import { Trash2, ShoppingCart } from 'lucide-react';
-import StoreUse from '../../Store/StoreUse';
-import { toast } from 'react-toastify';
+import React from "react";
+import { Modal, Button } from "antd";
+import { Trash2, ShoppingCart } from "lucide-react";
+import StoreUse from "../../Store/StoreUse";
+import { toast } from "react-toastify";
 
 const WishlistModal = () => {
-  const { favorites, isWishlistOpen, setWishlistOpen, toggleFavorite, addToCart, setCartOpen } = StoreUse();
+  const {
+    favorites,
+    isWishlistOpen,
+    setWishlistOpen,
+    toggleFavorite,
+    addToCart,
+    setCartOpen,
+  } = StoreUse();
 
   const handleAddToCart = (item) => {
     addToCart(item);
@@ -20,7 +27,9 @@ const WishlistModal = () => {
 
   return (
     <Modal
-      title={<span className="text-pink-600 font-semibold">Your Wishlist </span>}
+      title={
+        <span className="text-pink-600 font-semibold">Your Wishlist </span>
+      }
       open={isWishlistOpen}
       onCancel={() => setWishlistOpen(false)}
       footer={null}
@@ -34,15 +43,24 @@ const WishlistModal = () => {
           </div>
         ) : (
           favorites.map((item) => (
-            <div key={item._id} className="flex gap-4 border-b pb-4 items-center">
+            <div
+              key={item._id}
+              className="flex gap-4 border-b pb-4 items-center"
+            >
               <img
-                src={`http://localhost:5000${item.images[0]}`}
+                src={
+                  item.images[0].startsWith("http")
+                    ? item.images[0] // Cloudinary URL
+                    : `http://localhost:5000${item.images[0]}` // local fallback
+                }
                 alt={item.name}
                 className="w-24 h-24 object-cover rounded"
               />
               <div className="flex-grow">
                 <h3 className="font-semibold text-gray-800">{item.name}</h3>
-                <p className="text-sm text-gray-500 line-clamp-2">{item.description}</p>
+                <p className="text-sm text-gray-500 line-clamp-2">
+                  {item.description}
+                </p>
                 <div className="font-medium mt-2 text-pink-600">
                   Rs: {item.price}
                 </div>

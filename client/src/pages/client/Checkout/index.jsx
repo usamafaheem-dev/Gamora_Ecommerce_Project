@@ -372,7 +372,7 @@ const CheckoutPage = () => {
                 {cart.map((item) => (
                   <div key={item._id} className="flex gap-4">
                     <img
-                      src={item.images[0] || "https://via.placeholder.com/150"} // Cloudinary URL already full
+                      src={item.images[0]} // Cloudinary URL already full
                       alt={item.name}
                       className="w-20 h-20 object-cover rounded"
                     />

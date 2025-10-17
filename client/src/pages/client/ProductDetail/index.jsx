@@ -29,7 +29,7 @@ const { Content } = Layout;
 const { Title } = Typography;
 const { TabPane } = Tabs;
 
-const IMAGE_BASE_URL = 'http://localhost:5000';
+// const IMAGE_BASE_URL = 'https://glamora-utaq.onrender.com/';
 
 const ProductDetailsPage = () => {
   const { userRole } = useContext(AuthContext);
@@ -221,7 +221,7 @@ const ProductDetailsPage = () => {
                 {product.images.map((img, idx) => (
                   <button key={idx} onClick={() => setSelectedImage(idx)}
                     className={`flex-shrink-0 aspect-w-1 aspect-h-1 rounded-md overflow-hidden ${selectedImage === idx ? 'ring-2 ring-black' : ''}`}>
-                    <img src={`${IMAGE_BASE_URL}${img}`} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
+                    <img src={`${img}`} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </Col>
@@ -229,7 +229,7 @@ const ProductDetailsPage = () => {
               {/* Main Image */}
               <Col xs={24} sm={20}>
                 <div className="aspect-w-4 aspect-h-5 w-full h-[658px] bg-gray-100 rounded-lg overflow-hidden">
-                  <img src={`${IMAGE_BASE_URL}${product.images[selectedImage]}`} alt={product.name} className="w-full h-full object-cover" />
+                  <img src={`${product.images[selectedImage]}`} alt={product.name} className="w-full h-full object-cover" />
                 </div>
               </Col>
             </Row>
@@ -300,45 +300,64 @@ const ProductDetailsPage = () => {
         </Row>
 
         {/* Featured Products */}
-        <Divider className="my-12" />
-        <div className="mt-12">
-          <Title level={3} className="text-center !text-3xl">
-            Featured {product.category} - {product.subcategory}
-          </Title>
-          {relatedLoading ? <div className="flex justify-center"><Spin /></div> : 
-            relatedProducts.length > 0 ? (
-              <Swiper spaceBetween={30} slidesPerView={4} autoplay={{ delay: 3000, disableOnInteraction: false }} modules={[Autoplay]} breakpoints={{
-                320: { slidesPerView: 1, spaceBetween: 10 },
-                640: { slidesPerView: 2, spaceBetween: 20 },
-                768: { slidesPerView: 3, spaceBetween: 30 },
-                1024: { slidesPerView: 4, spaceBetween: 30 }
-              }} className="mySwiper px-4 py-6">
-                {relatedProducts.map(p => (
-                  <SwiperSlide key={p._id}>
-                    <div className="bg-white rounded-lg overflow-hidden h-full flex flex-col justify-between shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer" onClick={() => navigate(`/product/${p._id}`)}>
-                      <div className="relative pb-[120%]">
-                        <img src={`${IMAGE_BASE_URL}${p.images[0]}`} alt={p.name} className="absolute h-full w-full object-cover"/>
-                      </div>
-                      <div className="p-4">
-                        <h3 className="font-medium text-[14px] text-gray-900">{p.name}</h3>
-                        <div className="mt-1 flex justify-between items-center">
-                          <span className="text-gray-900 font-bold">Rs: {p.price}</span>
-                          <div className="flex items-center">
-                            <Rate disabled value={p.reviewCount ? p.reviewAvg : 0} count={1} className="text-amber-500"/>
-                            <span className="ml-1 text-sm text-gray-600">{p.reviewCount ? Number(p.reviewAvg).toFixed(1) : ''}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            ) : <p className="text-center text-gray-500 mt-6">No related products found.</p>
-          }
-        </div>
+       <Divider className="my-12" />
+<div className="mt-12">
+  <Title level={3} className="text-center !text-3xl">
+    Featured {product.category} - {product.subcategory}
+  </Title>
 
-        {/* Reviews Section */}
-        <Divider className="my-12" />
+  {relatedLoading ? (
+    <div className="flex justify-center"><Spin /></div>
+  ) : relatedProducts.length > 0 ? (
+    <Swiper
+      spaceBetween={30}
+      slidesPerView={4}
+      autoplay={{ delay: 3000, disableOnInteraction: false }}
+      modules={[Autoplay]}
+      breakpoints={{
+        320: { slidesPerView: 1, spaceBetween: 10 },
+        640: { slidesPerView: 2, spaceBetween: 20 },
+        768: { slidesPerView: 3, spaceBetween: 30 },
+        1024: { slidesPerView: 4, spaceBetween: 30 }
+      }}
+      className="mySwiper px-4 py-6"
+    >
+      {relatedProducts
+        .filter(p =>
+          p._id !== product._id && // خود product نہ آئے
+          p.category === product.category && 
+          p.subcategory === product.subcategory &&
+          p.gender === product.gender // male/female same ہو
+        )
+        .map(p => (
+          <SwiperSlide key={p._id}>
+            <div
+              className="bg-white rounded-lg overflow-hidden h-full flex flex-col justify-between shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+              onClick={() => navigate(`/product/${p._id}`)}
+            >
+              <div className="relative pb-[120%]">
+                <img src={`${p.images[0]}`} alt={p.name} className="absolute h-full w-full object-cover"/>
+              </div>
+              <div className="p-4">
+                <h3 className="font-medium text-[14px] text-gray-900">{p.name}</h3>
+                <div className="mt-1 flex justify-between items-center">
+                  <span className="text-gray-900 font-bold">Rs: {p.price}</span>
+                  <div className="flex items-center">
+                    <Rate disabled value={p.reviewCount ? p.reviewAvg : 0} count={1} className="text-amber-500"/>
+                    <span className="ml-1 text-sm text-gray-600">{p.reviewCount ? Number(p.reviewAvg).toFixed(1) : ''}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+    </Swiper>
+  ) : (
+    <p className="text-center text-gray-500 mt-6">No related products found.</p>
+  )}
+</div>
+<Divider className="my-12" />
+
         <div ref={reviewsRef} className="mt-12">
           <Title level={3} className="!text-3xl mb-6">Customer Reviews</Title>
           {reviewLoading ? <Spin /> : reviews.length > 0 ? (

@@ -42,11 +42,7 @@ const ShirtCard = ({ products, onClick }) => {
 
   return (
     <div className="group relative rounded-lg flex flex-col justify-between overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
-      <div
-        className="relative pb-[125%] overflow-hidden"
-        onClick={onClick ? () => onClick(products) : undefined}
-        style={onClick ? { cursor: "pointer" } : {}}
-      >
+      <div className="relative pb-[125%] overflow-hidden">
         <img
           src={
             images[0]?.startsWith("http")
@@ -56,34 +52,40 @@ const ShirtCard = ({ products, onClick }) => {
           alt={name}
           className="absolute inset-0 w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500"
         />
-
-        {userRole === "user" && (
-          <button
-            onClick={handleToggleFavorite}
-            className="absolute top-2 right-2 p-2 rounded-full bg-white shadow-md hover:bg-gray-50 transition-colors"
+        <div>
+          <div
+            onClick={onClick ? () => onClick(products) : undefined}
+            style={onClick ? { cursor: "pointer" } : {}}
           >
-            <Heart
-              size={20}
-              className={
-                isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
-              }
-            />
-          </button>
-        )}
+            {userRole === "user" && (
+              <button
+                onClick={handleToggleFavorite}
+                className="absolute top-2 right-2 p-2 rounded-full bg-white shadow-md hover:bg-gray-50 transition-colors"
+              >
+                <Heart
+                  size={20}
+                  className={
+                    isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
+                  }
+                />
+              </button>
+            )}
 
-        {/* Category badge */}
-        <div className="absolute top-2 left-[14%]">
-          <Badge.Ribbon
-            text={subcategory}
-            color="#0F172A"
-            className="font-medium"
-          />
-        </div>
-        {products.stock === 0 && (
-          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10">
-            Out of Stock
+            {/* Category badge */}
+            <div className="absolute top-2 left-[14%]">
+              <Badge.Ribbon
+                text={subcategory}
+                color="#0F172A"
+                className="font-medium"
+              />
+            </div>
+            {products.stock === 0 && (
+              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10">
+                Out of Stock
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       <div className="p-4">
