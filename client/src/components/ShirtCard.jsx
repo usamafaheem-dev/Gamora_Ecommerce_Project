@@ -36,7 +36,8 @@ const ShirtCard = ({ products, onClick }) => {
     setCartOpen(true);
   };
 
-  const handleToggleFavorite = () => {
+  const handleToggleFavorite = (e) => {
+    e.stopPropagation(); // <-- prevents parent div click
     toggleFavorite(products);
   };
 
