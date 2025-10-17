@@ -58,7 +58,7 @@ const UserOrdersPage = () => {
     "https://res.cloudinary.com/dyxv8azgc/image/upload";
   const getImageUrl = (path) => {
     if (!path) return "https://via.placeholder.com/64x64?text=No+Image";
-    if (path.startsWith("http")) return path;
+    if (path.startsWith("https")) return path;
     const cleanedPath = path.startsWith("/") ? path.slice(1) : path;
     return `${CLOUDINARY_BASE_URL}/v1760694693/${cleanedPath}`;
   };

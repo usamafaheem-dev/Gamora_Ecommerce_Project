@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Input, Select, Upload, message, Row, Col } from 'antd';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+// import axios from 'axios';
+import api from '../../../utils/api';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -89,13 +90,13 @@ const CreateModal = ({ onCreate, onUpdate, editProduct, category }) => {
       });
 
       if (isEditMode) {
-        const response = await axios.put(`http://localhost:5000/api/products/${editProduct._id}`, formData, {
+        const response = await api.put(`/products/${editProduct._id}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         onUpdate(response.data.product);
         toast.success('Product updated successfully');
       } else {
-        const response = await axios.post('http://localhost:5000/api/products', formData, {
+        const response = await api.post('/products', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         onCreate(response.data.product);
