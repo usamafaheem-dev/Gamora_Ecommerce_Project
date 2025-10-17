@@ -1,17 +1,30 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Camera, Edit2, Trash2, User, Phone, MapPin, Save, X, Upload, Check, AlertCircle } from 'lucide-react';
-import axios from 'axios';
-import api from '../../../utils/api';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Camera,
+  Edit2,
+  Trash2,
+  User,
+  Phone,
+  MapPin,
+  Save,
+  X,
+  Upload,
+  Check,
+  AlertCircle,
+} from "lucide-react";
+import axios from "axios";
 
 const ProfileCard = () => {
-  const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
-    mobileNumber: '',
-    address: '',
-  });
+  const initialFormState = {
+    firstName: "",
+    lastName: "",
+    mobileNumber: "",
+    address: "",
+  };
+
+  const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState({});
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState("");
   const [image, setImage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -23,41 +36,65 @@ const ProfileCard = () => {
 
   const fileInputRef = useRef(null);
   const dragCounter = useRef(0);
+  const API_BASE_URL = "http://localhost:5000/api";
 
   // Toast notification system
-  const showToast = (message, type = 'success') => {
+  const showToast = (message, type = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 4000);
   };
 
   // Fetch profile data from API
   useEffect(() => {
+    let isMounted = true;
+
     const fetchProfile = async () => {
       try {
-        const response = await api.get('/profile', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        const response = await axios.get(`${API_BASE_URL}/profile`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
-        const profile = response.data.profile;
-        setProfileData(profile);
-        setIsFormVisible(!profile.firstName);
-        setPhone(profile.mobileNumber || '');
+        if (isMounted) {
+          const profile = response.data.profile;
+          setProfileData(profile);
+          setIsFormVisible(!profile?.firstName);
+          setPhone(profile?.mobileNumber || "");
+          if (profile) {
+            setForm({
+              firstName: profile.firstName || "",
+              lastName: profile.lastName || "",
+              mobileNumber: profile.mobileNumber || "",
+              address: profile.address || "",
+            });
+          }
+        }
       } catch (error) {
-        console.error('Error fetching profile:', error.message);
-        showToast(error.response?.data?.message || 'Failed to fetch profile', 'error');
+        if (isMounted) {
+          console.error("Error fetching profile:", error.message);
+          showToast(
+            error.response?.data?.message || "Failed to fetch profile",
+            "error"
+          );
+        }
       }
     };
+
     fetchProfile();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Form validation
   const validateForm = () => {
     const newErrors = {};
-    if (!form.firstName.trim()) newErrors.firstName = 'First name is required';
-    if (!form.lastName.trim()) newErrors.lastName = 'Last name is required';
-    if (!phone || phone.length < 10) newErrors.mobileNumber = 'Valid mobile number is required';
-    if (!form.address.trim()) newErrors.address = 'Address is required';
+    if (!form.firstName.trim()) newErrors.firstName = "First name is required";
+    if (!form.lastName.trim()) newErrors.lastName = "Last name is required";
+    if (!phone || phone.length < 10)
+      newErrors.mobileNumber = "Valid mobile number is required";
+    if (!form.address.trim()) newErrors.address = "Address is required";
     if (!imageFile && !profileData?.profileImage && !isEditing) {
-      newErrors.image = 'Profile image is required';
+      newErrors.image = "Profile image is required";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -67,14 +104,14 @@ const ProfileCard = () => {
   const handleInputChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: '' }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
   const handlePhoneChange = (value) => {
     setPhone(value);
     if (errors.mobileNumber) {
-      setErrors((prev) => ({ ...prev, mobileNumber: '' }));
+      setErrors((prev) => ({ ...prev, mobileNumber: "" }));
     }
   };
 
@@ -113,16 +150,17 @@ const ProfileCard = () => {
   };
 
   const handleImageFile = (file) => {
-    if (!file.type.startsWith('image/')) {
-      showToast('Please upload a valid image file', 'error');
+    if (!file.type.startsWith("image/")) {
+      showToast("Please upload a valid image file", "error");
       return;
     }
     setImageFile(file);
     const reader = new FileReader();
     reader.onload = () => setImage(reader.result);
+    reader.onerror = () => showToast("Error reading image file", "error");
     reader.readAsDataURL(file);
     if (errors.image) {
-      setErrors((prev) => ({ ...prev, image: '' }));
+      setErrors((prev) => ({ ...prev, image: "" }));
     }
   };
 
@@ -140,34 +178,38 @@ const ProfileCard = () => {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append('firstName', form.firstName);
-      formData.append('lastName', form.lastName);
-      formData.append('mobileNumber', phone);
-      formData.append('address', form.address);
+      formData.append("firstName", form.firstName);
+      formData.append("lastName", form.lastName);
+      formData.append("mobileNumber", phone);
+      formData.append("address", form.address);
       if (imageFile) {
-        formData.append('profileImage', imageFile);
+        formData.append("profileImage", imageFile);
       }
 
-      const response = await api.put('/profile', formData, {
+      const response = await axios.put(`${API_BASE_URL}/profile`, formData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
         },
       });
 
       setProfileData(response.data.profile);
       setIsFormVisible(false);
       setIsEditing(false);
-      showToast(response.data.message || (isEditing ? 'Profile updated successfully!' : 'Profile created successfully!'));
+      showToast(
+        response.data.message ||
+          (isEditing
+            ? "Profile updated successfully!"
+            : "Profile created successfully!")
+      );
 
-      setForm({ firstName: '', lastName: '', mobileNumber: '', address: '' });
-      setPhone('');
-      setImage(null);
-      setImageFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      handleCancel();
     } catch (error) {
-      console.error('Error saving profile:', error.message);
-      showToast(error.response?.data?.message || 'Failed to save profile', 'error');
+      console.error("Error saving profile:", error.message);
+      showToast(
+        error.response?.data?.message || "Failed to save profile",
+        "error"
+      );
     } finally {
       setLoading(false);
     }
@@ -179,38 +221,40 @@ const ProfileCard = () => {
     setIsFormVisible(true);
     if (profileData) {
       setForm({
-        firstName: profileData.firstName,
-        lastName: profileData.lastName,
-        mobileNumber: profileData.mobileNumber,
-        address: profileData.address,
+        firstName: profileData.firstName || "",
+        lastName: profileData.lastName || "",
+        mobileNumber: profileData.mobileNumber || "",
+        address: profileData.address || "",
       });
-      setPhone(profileData.mobileNumber || '');
-      setImage(profileData.profileImage ? `http://localhost:5000${profileData.profileImage}` : null);
+      setPhone(profileData.mobileNumber || "");
+      setImage(
+        profileData.profileImage ? `${API_BASE_URL}/${profileData.profileImage}` : null
+      );
       setImageFile(null);
     }
   };
 
   // Delete profile
   const handleDelete = async () => {
-    if (!window.confirm('Are you sure you want to delete your profile?')) return;
+    if (!window.confirm("Are you sure you want to delete your profile?"))
+      return;
 
     setLoading(true);
     try {
-      await api.delete('/profile', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      await axios.delete(`${API_BASE_URL}/profile`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setProfileData(null);
       setIsFormVisible(true);
       setIsEditing(false);
-      setForm({ firstName: '', lastName: '', mobileNumber: '', address: '' });
-      setPhone('');
-      setImage(null);
-      setImageFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-      showTommy('Profile deleted successfully!');
+      handleCancel();
+      showToast("Profile deleted successfully!");
     } catch (error) {
-      console.error('Error deleting profile:', error.message);
-      showToast(error.response?.data?.message || 'Failed to delete profile', 'error');
+      console.error("Error deleting profile:", error.message);
+      showToast(
+        error.response?.data?.message || "Failed to delete profile",
+        "error"
+      );
     } finally {
       setLoading(false);
     }
@@ -220,12 +264,12 @@ const ProfileCard = () => {
   const handleCancel = () => {
     setIsFormVisible(false);
     setIsEditing(false);
-    setForm({ firstName: '', lastName: '', mobileNumber: '', address: '' });
-    setPhone('');
+    setForm(initialFormState);
+    setPhone("");
     setImage(null);
     setImageFile(null);
     setErrors({});
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
@@ -234,12 +278,16 @@ const ProfileCard = () => {
       {toast && (
         <div
           className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-sm transition-all duration-500 transform ${
-            toast.type === 'success'
-              ? 'bg-emerald-500/90 text-white border border-emerald-400/50'
-              : 'bg-red_editor-500/90 text-white border border-red-400/50'
+            toast.type === "success"
+              ? "bg-emerald-500/90 text-white border border-emerald-400/50"
+              : "bg-red-500/90 text-white border border-red-400/50"
           } animate-in slide-in-from-right-full`}
         >
-          {toast.type === 'success' ? <Check size={20} /> : <AlertCircle size={20} />}
+          {toast.type === "success" ? (
+            <Check size={20} />
+          ) : (
+            <AlertCircle size={20} />
+          )}
           <span className="font-medium">{toast.message}</span>
         </div>
       )}
@@ -249,10 +297,12 @@ const ProfileCard = () => {
           <div className="bg-white/80 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden">
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 text-center">
               <h2 className="text-3xl font-bold text-white mb-2">
-                {isEditing ? 'Edit Your Profile' : 'Create Your Profile'}
+                {isEditing ? "Edit Your Profile" : "Create Your Profile"}
               </h2>
               <p className="text-indigo-100">
-                {isEditing ? 'Update your information below' : 'Fill in your details to get started'}
+                {isEditing
+                  ? "Update your information below"
+                  : "Fill in your details to get started"}
               </p>
             </div>
 
@@ -260,7 +310,9 @@ const ProfileCard = () => {
               {/* Image Upload Section */}
               <div className="flex justify-center mb-8">
                 <div
-                  className={`relative group ${dragActive ? 'scale-105' : ''} transition-all duration-300`}
+                  className={`relative group ${
+                    dragActive ? "scale-105" : ""
+                  } transition-all duration-300`}
                   onDragEnter={handleDragIn}
                   onDragLeave={handleDragOut}
                   onDragOver={handleDrag}
@@ -269,21 +321,22 @@ const ProfileCard = () => {
                   <div
                     className={`w-32 h-32 rounded-full overflow-hidden border-4 transition-all duration-300 ${
                       dragActive
-                        ? 'border-indigo-400 shadow-lg shadow-indigo-400/50'
-                        : 'border-gray-200 group-hover:border-indigo-300'
+                        ? "border-indigo-400 shadow-lg shadow-indigo-400/50"
+                        : "border-gray-200 group-hover:border-indigo-300"
                     }`}
                   >
                     <img
                       src={
                         image ||
                         (isEditing && profileData?.profileImage
-                          ? `http://localhost:5000${profileData.profileImage}`
-                          : 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=400')
+                          ? `${API_BASE_URL}/${profileData.profileImage}`
+                          : "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=400")
                       }
                       alt="Profile"
                       className="w-full h-full object-cover transition-all duration-300 group-hover:scale-110"
                       onError={(e) => {
-                        e.target.src = 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=400';
+                        e.target.src =
+                          "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=400";
                       }}
                     />
                   </div>
@@ -309,85 +362,131 @@ const ProfileCard = () => {
                   />
                 </div>
               </div>
-              {errors.image && <p className="text-red-500 text-sm text-center mb-6">{errors.image}</p>}
+              {errors.image && (
+                <p className="text-red-500 text-sm text-center mb-6">
+                  {errors.image}
+                </p>
+              )}
 
               <form onSubmit={onSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-2">First Name</label>
+                    <label className="block text-gray-700 font-semibold mb-2">
+                      First Name
+                    </label>
                     <div className="relative">
-                      <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                      <User
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                        size={18}
+                      />
                       <input
                         type="text"
                         value={form.firstName}
-                        onChange={(e) => handleInputChange('firstName', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("firstName", e.target.value)
+                        }
                         className={`w-full pl-12 pr-4 py-3 bg-gray-50 border rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:bg-white transition-all duration-300 ${
                           errors.firstName
-                            ? 'border-red-300 focus:ring-red-200'
-                            : 'border-gray-200 focus:border-indigo-300 focus:ring-indigo-200'
+                            ? "border-red-300 focus:ring-red-200"
+                            : "border-gray-200 focus:border-indigo-300 focus:ring-indigo-200"
                         }`}
                         placeholder="Enter first name"
                       />
                     </div>
-                    {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
+                    {errors.firstName && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.firstName}
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-2">Last Name</label>
+                    <label className="block text-gray-700 font-semibold mb-2">
+                      Last Name
+                    </label>
                     <div className="relative">
-                      <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                      <User
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                        size={18}
+                      />
                       <input
                         type="text"
                         value={form.lastName}
-                        onChange={(e) => handleInputChange('lastName', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("lastName", e.target.value)
+                        }
                         className={`w-full pl-12 pr-4 py-3 bg-gray-50 border rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:bg-white transition-all duration-300 ${
                           errors.lastName
-                            ? 'border-red-300 focus:ring-red-200'
-                            : 'border-gray-200 focus:border-indigo-300 focus:ring-indigo-200'
+                            ? "border-red-300 focus:ring-red-200"
+                            : "border-gray-200 focus:border-indigo-300 focus:ring-indigo-200"
                         }`}
                         placeholder="Enter last name"
                       />
                     </div>
-                    {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
+                    {errors.lastName && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.lastName}
+                      </p>
+                    )}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-2">Mobile Number</label>
+                  <label className="block text-gray-700 font-semibold mb-2">
+                    Mobile Number
+                  </label>
                   <div className="relative">
-                    <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                    <Phone
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                      size={18}
+                    />
                     <input
                       type="tel"
                       value={phone}
                       onChange={(e) => handlePhoneChange(e.target.value)}
                       className={`w-full pl-12 pr-4 py-3 bg-gray-50 border rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:bg-white transition-all duration-300 ${
                         errors.mobileNumber
-                          ? 'border-red-300 focus:ring-red-200'
-                          : 'border-gray-200 focus:border-indigo-300 focus:ring-indigo-200'
+                          ? "border-red-300 focus:ring-red-200"
+                          : "border-gray-200 focus:border-indigo-300 focus:ring-indigo-200"
                       }`}
                       placeholder="+1 (555) 123-4567"
                     />
                   </div>
-                  {errors.mobileNumber && <p className="text-red-500 text-sm mt-1">{errors.mobileNumber}</p>}
+                  {errors.mobileNumber && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.mobileNumber}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-2">Address</label>
+                  <label className="block text-gray-700 font-semibold mb-2">
+                    Address
+                  </label>
                   <div className="relative">
-                    <MapPin className="absolute left-4 top-4 text-gray-400" size={18} />
+                    <MapPin
+                      className="absolute left-4 top-4 text-gray-400"
+                      size={18}
+                    />
                     <textarea
                       value={form.address}
-                      onChange={(e) => handleInputChange('address', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("address", e.target.value)
+                      }
                       rows={4}
                       className={`w-full pl-12 pr-4 py-3 bg-gray-50 border rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:bg-white transition-all duration-300 resize-none ${
                         errors.address
-                          ? 'border-red-300 focus:ring-red-200'
-                          : 'border-gray-200 focus:border-indigo-300 focus:ring-indigo-200'
+                          ? "border-red-300 focus:ring-red-200"
+                          : "border-gray-200 focus:border-indigo-300 focus:ring-indigo-200"
                       }`}
                       placeholder="Enter your address"
                     />
                   </div>
-                  {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+                  {errors.address && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.address}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex xs:flex-col gap-4 pt-4">
@@ -401,7 +500,11 @@ const ProfileCard = () => {
                     ) : (
                       <Save size={18} />
                     )}
-                    {loading ? 'Saving...' : isEditing ? 'Update Profile' : 'Save Profile'}
+                    {loading
+                      ? "Saving..."
+                      : isEditing
+                      ? "Update Profile"
+                      : "Save Profile"}
                   </button>
 
                   {isEditing && (
@@ -422,7 +525,9 @@ const ProfileCard = () => {
           <div className="bg-white/80 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden">
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-white">Profile Details</h2>
+                <h2 className="text-2xl font-bold text-white">
+                  Profile Details
+                </h2>
                 <div className="flex gap-3">
                   <button
                     onClick={handleEdit}
@@ -451,13 +556,14 @@ const ProfileCard = () => {
                   <img
                     src={
                       profileData?.profileImage
-                        ? `http://localhost:5000${profileData.profileImage}`
-                        : 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=400'
+                        ? `${API_BASE_URL}/${profileData.profileImage}`
+                        : "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=400"
                     }
                     alt="Profile"
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      e.target.src = 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=400';
+                      e.target.src =
+                        "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=400";
                     }}
                   />
                 </div>
@@ -470,9 +576,13 @@ const ProfileCard = () => {
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
                   <div className="flex items-center gap-3 mb-2">
                     <Phone className="text-blue-600" size={18} />
-                    <span className="text-gray-600 font-medium">Mobile Number</span>
+                    <span className="text-gray-600 font-medium">
+                      Mobile Number
+                    </span>
                   </div>
-                  <p className="text-gray-800 text-lg pl-7">{profileData?.mobileNumber}</p>
+                  <p className="text-gray-800 text-lg pl-7">
+                    {profileData?.mobileNumber}
+                  </p>
                 </div>
 
                 <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-100">
@@ -480,7 +590,9 @@ const ProfileCard = () => {
                     <MapPin className="text-green-600" size={18} />
                     <span className="text-gray-600 font-medium">Address</span>
                   </div>
-                  <p className="text-gray-800 text-lg pl-7">{profileData?.address}</p>
+                  <p className="text-gray-800 text-lg pl-7">
+                    {profileData?.address}
+                  </p>
                 </div>
               </div>
             </div>

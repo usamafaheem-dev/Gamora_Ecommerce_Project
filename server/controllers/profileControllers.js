@@ -28,7 +28,9 @@ exports.updateProfile = async (req, res) => {
 
     try {
         const { firstName, lastName, mobileNumber, address } = req.body;
-        const profileImage = req.file ? `/uploads/${req.file.filename}` : undefined;
+
+        // ✅ Cloudinary-compatible change (store direct Cloudinary URL)
+        const profileImage = req.file ? req.file.path : undefined;
 
         // Fetch existing user to check for profileImage
         const existingUser = await User.findById(req.user._id);
@@ -46,7 +48,7 @@ exports.updateProfile = async (req, res) => {
             lastName,
             mobileNumber,
             address,
-            ...(profileImage && { profileImage }), // Only update profileImage if a new one is provided
+            ...(profileImage && { profileImage }), // Only update if new one is provided
         };
 
         const user = await User.findByIdAndUpdate(
