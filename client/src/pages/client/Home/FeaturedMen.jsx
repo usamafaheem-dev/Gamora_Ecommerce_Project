@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { message, Spin } from 'antd';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import { productsAPI } from '../../../utils/api';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { message, Spin } from "antd";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+import "swiper/css";
+import { productsAPI } from "../../../utils/api";
+import { Link } from "react-router-dom";
 
 const FeaturedMen = () => {
   const [products, setProducts] = useState([]);
@@ -15,16 +15,29 @@ const FeaturedMen = () => {
       try {
         setLoading(true);
         const response = await productsAPI.getAll();
-        const all = response.data.filter((p) => p.category === 'Men');
-        const shirts = all.filter((p) => p.subcategory && p.subcategory.toLowerCase().includes('shirt')).slice(0, 3);
-        const pants = all.filter((p) => p.subcategory && p.subcategory.toLowerCase().includes('pant')).slice(0, 3);
-        const shoes = all.filter((p) => p.subcategory && p.subcategory.toLowerCase().includes('shoe')).slice(0, 3);
+        const all = response.data.filter((p) => p.category === "Men");
+        const shirts = all
+          .filter(
+            (p) =>
+              p.subcategory && p.subcategory.toLowerCase().includes("shirt")
+          )
+          .slice(0, 3);
+        const pants = all
+          .filter(
+            (p) => p.subcategory && p.subcategory.toLowerCase().includes("pant")
+          )
+          .slice(0, 3);
+        const shoes = all
+          .filter(
+            (p) => p.subcategory && p.subcategory.toLowerCase().includes("shoe")
+          )
+          .slice(0, 3);
         let mixed = [...shirts, ...pants, ...shoes];
         mixed = mixed.sort(() => Math.random() - 0.5);
         setProducts(mixed);
       } catch (error) {
-        console.error('Error fetching products:', error);
-        message.error('Failed to load products');
+        console.error("Error fetching products:", error);
+        message.error("Failed to load products");
       } finally {
         setLoading(false);
       }
@@ -33,17 +46,17 @@ const FeaturedMen = () => {
   }, []);
 
   const getSubcategoryRoute = (subcategory) => {
-    if (!subcategory) return '/men';
+    if (!subcategory) return "/men";
     const sub = subcategory.toLowerCase();
     const subcategoryRoutes = {
-      shirt: '/men/shirts',
-      pants: '/men/pants',
-      shoes: '/men/shoes',
+      shirt: "/men/shirts",
+      pants: "/men/pants",
+      shoes: "/men/shoes",
     };
-    if (sub.includes('shirt')) return subcategoryRoutes.shirt;
-    if (sub.includes('pant')) return subcategoryRoutes.pants;
-    if (sub.includes('shoe')) return subcategoryRoutes.shoes;
-    return '/men';
+    if (sub.includes("shirt")) return subcategoryRoutes.shirt;
+    if (sub.includes("pant")) return subcategoryRoutes.pants;
+    if (sub.includes("shoe")) return subcategoryRoutes.shoes;
+    return "/men";
   };
 
   const handleProductClick = (product) => {
@@ -116,15 +129,22 @@ const FeaturedMen = () => {
                   >
                     <div className="relative pb-[100%]">
                       <img
-                        src={`http://localhost:5000${product.images[0]}`}
+                        src={
+                          product.images[0] || "https://via.placeholder.com/400"
+                        } // fallback placeholder
                         alt={product.name}
                         className="absolute h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
+
                       <div className="absolute inset-0 bg-gradient-to-t from-gray-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     </div>
                     <div className="p-4 sm:p-6">
-                      <h3 className="font-semibold text-gray-900 text-base sm:text-lg truncate">{product.name}</h3>
-                      <p className="text-pink-500 font-medium text-sm sm:text-base mt-1">Rs: {product.price.toFixed(2)}</p>
+                      <h3 className="font-semibold text-gray-900 text-base sm:text-lg truncate">
+                        {product.name}
+                      </h3>
+                      <p className="text-pink-500 font-medium text-sm sm:text-base mt-1">
+                        Rs: {product.price.toFixed(2)}
+                      </p>
                       <span className="inline-block mt-2 text-pink-400 text-sm sm:text-base font-medium group-hover:text-pink-300 transition-colors">
                         Shop Now →
                       </span>
@@ -138,12 +158,24 @@ const FeaturedMen = () => {
       </section>
       <style jsx>{`
         @keyframes fade-in {
-          0% { opacity: 0; transform: translateY(20px); }
-          100% { opacity: 1; transform: translateY(0); }
+          0% {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         @keyframes slide-up {
-          0% { opacity: 0; transform: translateY(30px); }
-          100% { opacity: 1; transform: translateY(0); }
+          0% {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         .animate-fade-in {
           animation: fade-in 1s ease-out;

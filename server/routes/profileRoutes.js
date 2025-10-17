@@ -3,26 +3,25 @@ const router = express.Router();
 const { protect } = require('../middleware/auth');
 const profileController = require('../controllers/profileControllers');
 const upload = require('../middleware/upload');
-const { validateProfile } = require('../middleware/validateProfile')
+const { validateProfile } = require('../middleware/validateProfile');
 const { validationResult } = require('express-validator');
 
-
+// Middleware to handle validation results
 const validate = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  next();
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+    next();
 };
 
+// Routes
 router.get('/', protect, profileController.getProfile);
 router.put(
-  '/',
-  protect,
-  upload.single('profileImage'),
-  validateProfile,
-  validate,
-  profileController.updateProfile
+    '/',
+    protect,
+    upload.single('profileImage'), // Must match frontend field name
+    validateProfile,
+    validate,
+    profileController.updateProfile
 );
 router.delete('/', protect, profileController.deleteProfile);
 

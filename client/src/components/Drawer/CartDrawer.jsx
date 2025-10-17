@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import StoreUse from "../Store/StoreUse";
 import { toast } from "react-toastify";
 import axios from "axios";
+import api from "../../utils/api";
 
 const CartDrawer = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const CartDrawer = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/profile", {
+        const response = await api.get("/profile", {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         setIsAdmin(response.data.profile?.role === "admin");

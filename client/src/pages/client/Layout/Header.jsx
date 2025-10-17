@@ -1,16 +1,35 @@
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { Badge, Drawer, Dropdown, Space, Spin } from 'antd';
-import axios from 'axios';
-import { Bell, CircleGauge, Heart, Mail, Menu, Shirt, ShoppingBag, User, X } from 'lucide-react';
-import { useContext, useEffect, useState } from 'react';
-import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { StoreUse } from '../../../components';
-import { AuthContext } from '../../../routes/AuthProvider';
-import api from '../../../utils/api';
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { Badge, Drawer, Dropdown, Space, Spin } from "antd";
+import axios from "axios";
+import {
+  Bell,
+  CircleGauge,
+  Heart,
+  Mail,
+  Menu,
+  Shirt,
+  ShoppingBag,
+  User,
+  X,
+} from "lucide-react";
+import { useContext, useEffect, useState } from "react";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import { StoreUse } from "../../../components";
+import { AuthContext } from "../../../routes/AuthProvider";
+import api from "../../../utils/api";
 
 const Header = () => {
-  const { cart, favorites, setCartOpen, setWishlistOpen, notifications, setNotificationOpen, fetchNotifications } = StoreUse();
+
+  const {
+    cart,
+    favorites,
+    setCartOpen,
+    setWishlistOpen,
+    notifications,
+    setNotificationOpen,
+    fetchNotifications,
+  } = StoreUse();
   const { isAuthenticated, userRole, userEmail } = useContext(AuthContext);
 
   const [profile, setProfile] = useState(null);
@@ -22,83 +41,169 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await api.post('/auth/logout', {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
-      localStorage.removeItem('token');
-      toast.success('Logged out successfully');
-      navigate('/auth/login');
+      await api.post(
+        "/auth/logout",
+        {},
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      localStorage.removeItem("token");
+      toast.success("Logged out successfully");
+      navigate("/auth/login");
     } catch (error) {
-      toast.error('Error during logout');
+      toast.error("Error during logout");
       console.log(error);
     }
   };
 
   const navCategories = [
     {
-      name: 'Men',
-      path: '/men',
+      name: "Men",
+      path: "/men",
       items: [
-        { label: 'All', key: 'all', path: '/men', onClick: () => navigate('/men') },
-        { label: 'Shirts', key: 'men-shirts', path: '/men/shirts', onClick: () => navigate('/men/shirts') },
-        { label: 'Pants', key: 'men-pants', path: '/men/pants', onClick: () => navigate('/men/pants') },
-        { label: 'Shoes', key: 'men-shoes', path: '/men/shoes', onClick: () => navigate('/men/shoes') },
+        {
+          label: "All",
+          key: "all",
+          path: "/men",
+          onClick: () => navigate("/men"),
+        },
+        {
+          label: "Shirts",
+          key: "men-shirts",
+          path: "/men/shirts",
+          onClick: () => navigate("/men/shirts"),
+        },
+        {
+          label: "Pants",
+          key: "men-pants",
+          path: "/men/pants",
+          onClick: () => navigate("/men/pants"),
+        },
+        {
+          label: "Shoes",
+          key: "men-shoes",
+          path: "/men/shoes",
+          onClick: () => navigate("/men/shoes"),
+        },
       ],
     },
     {
-      name: 'Women',
-      path: '/women',
+      name: "Women",
+      path: "/women",
       items: [
-        { label: 'All', key: 'all', path: '/women', onClick: () => navigate('/women') },
-        { label: 'Shirts', key: 'women-dresses', path: '/women/shirts', onClick: () => navigate('/women/shirts') },
-        { label: 'Pants', key: 'women-pants', path: '/women/pants', onClick: () => navigate('/women/pants') },
-        { label: 'Shoes', key: 'women-shoes', path: '/women/shoes', onClick: () => navigate('/women/shoes') },
+        {
+          label: "All",
+          key: "all",
+          path: "/women",
+          onClick: () => navigate("/women"),
+        },
+        {
+          label: "Shirts",
+          key: "women-dresses",
+          path: "/women/shirts",
+          onClick: () => navigate("/women/shirts"),
+        },
+        {
+          label: "Pants",
+          key: "women-pants",
+          path: "/women/pants",
+          onClick: () => navigate("/women/pants"),
+        },
+        {
+          label: "Shoes",
+          key: "women-shoes",
+          path: "/women/shoes",
+          onClick: () => navigate("/women/shoes"),
+        },
       ],
     },
   ];
 
-  const profileItems = userRole === 'admin' ? [
-    { key: '1', label: userEmail, disabled: true },
-    { key: '2', label: <Link to="/admin"> Dashboard </Link>, icon: <CircleGauge size={20} /> },
-    { key: '4', label: <span className='text-red-600'>Logout</span>, icon: <X size={20} className='text-red-600' />, onClick: handleLogout },
-  ] : [
-    { key: '1', label: <span>{profile?.email}</span>, icon: <Mail size={20} /> },
-    { key: '2', label: 'My Orders', icon: <ShoppingBag size={20} />, onClick: () => navigate('/my-orders') },
-    { key: '3', label: 'Profile', icon: <User size={20} />, onClick: () => navigate('/profile') },
-    { key: 'wallet', label: 'My Wallet', icon: <Icon icon="icon-park-outline:wallet" width="20" />, onClick: () => navigate('/wallet') },
-    { key: '4', label: <span className='text-red-600'>Logout</span>, icon: <X size={20} className='text-red-600' />, onClick: handleLogout },
-  ];
+  const profileItems =
+    userRole === "admin"
+      ? [
+          { key: "1", label: userEmail, disabled: true },
+          {
+            key: "2",
+            label: <Link to="/admin"> Dashboard </Link>,
+            icon: <CircleGauge size={20} />,
+          },
+          {
+            key: "4",
+            label: <span className="text-red-600">Logout</span>,
+            icon: <X size={20} className="text-red-600" />,
+            onClick: handleLogout,
+          },
+        ]
+      : [
+          {
+            key: "1",
+            label: <span>{profile?.email}</span>,
+            icon: <Mail size={20} />,
+          },
+          {
+            key: "2",
+            label: "My Orders",
+            icon: <ShoppingBag size={20} />,
+            onClick: () => navigate("/my-orders"),
+          },
+          {
+            key: "3",
+            label: "Profile",
+            icon: <User size={20} />,
+            onClick: () => navigate("/profile"),
+          },
+          {
+            key: "wallet",
+            label: "My Wallet",
+            icon: <Icon icon="icon-park-outline:wallet" width="20" />,
+            onClick: () => navigate("/wallet"),
+          },
+          {
+            key: "4",
+            label: <span className="text-red-600">Logout</span>,
+            icon: <X size={20} className="text-red-600" />,
+            onClick: handleLogout,
+          },
+        ];
 
-  const unreadNotifications = Array.isArray(notifications) ? notifications.filter(n => !n.read).length : 0;
+  const unreadNotifications = Array.isArray(notifications)
+    ? notifications.filter((n) => !n.read).length
+    : 0;
 
-  const isCategoryActive = (categoryPath) => location.pathname.startsWith(categoryPath);
+  const isCategoryActive = (categoryPath) =>
+    location.pathname.startsWith(categoryPath);
   const isDropdownItemActive = (itemPath) => location.pathname === itemPath;
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const profileResponse = await api.get('/profile', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        const profileResponse = await api.get("/profile", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         setProfile(profileResponse.data.profile);
         await fetchNotifications();
       } catch (error) {
-        console.error('Error fetching data:', error.message);
-        toast.error(error.response?.data?.message || 'Failed to fetch data');
+        console.error("Error fetching data:", error.message);
+        toast.error(error.response?.data?.message || "Failed to fetch data");
       } finally {
         setLoading(false);
       }
     };
 
-    if (localStorage.getItem('token')) fetchData();
+    if (localStorage.getItem("token")) fetchData();
   }, [fetchNotifications]);
 
   return (
-    
     <div className="flex justify-between items-center h-20 px-4 md:px-10 shadow-lg fixed w-full top-0 z-50 bg-gradient-to-r from-gray-900 to-gray-800">
-      <Link to='/' className="lg:w-[160px] w-[140px] lg:h-14 h-12">
-        <img src="/assets/glamLogo.png" alt="header logo" className='size-full object-cover brightness-0 invert' />
+      <Link to="/" className="lg:w-[160px] w-[140px] lg:h-14 h-12">
+        <img
+          src="/assets/glamLogo.png"
+          alt="header logo"
+          className="size-full object-cover brightness-0 invert"
+        />
       </Link>
 
       {/* Desktop Navigation */}
@@ -107,26 +212,37 @@ const Header = () => {
           <Dropdown
             key={category.name}
             menu={{
-              items: category.items.map(item => ({
+              items: category.items.map((item) => ({
                 ...item,
                 label: (
-                  <span className={`transition-colors ${isDropdownItemActive(item.path) ? 'text-pink-500 font-semibold' : 'text-gray-700'}`}>
+                  <span
+                    className={`transition-colors ${
+                      isDropdownItemActive(item.path)
+                        ? "text-pink-500 font-semibold"
+                        : "text-gray-700"
+                    }`}
+                  >
                     {item.label}
                   </span>
                 ),
-                className: `hover:bg-pink-50 ${isDropdownItemActive(item.path) ? 'bg-pink-50' : ''}`,
+                className: `hover:bg-pink-50 ${
+                  isDropdownItemActive(item.path) ? "bg-pink-50" : ""
+                }`,
               })),
             }}
             placement="bottom"
-            trigger={['hover']}
-            onOpenChange={(open) => setActiveDropdown(open ? category.name : null)}
+            trigger={["hover"]}
+            onOpenChange={(open) =>
+              setActiveDropdown(open ? category.name : null)
+            }
             overlayClassName="bg-white rounded-lg shadow-xl border border-gray-100"
           >
             <div
               className={`flex items-center cursor-pointer px-3 py-2 rounded-lg transition-all duration-300 ${
-                isCategoryActive(category.path) || activeDropdown === category.name
-                  ? 'text-pink-500 font-semibold bg-pink-50'
-                  : 'text-white hover:bg-pink-50/20 hover:text-pink-400'
+                isCategoryActive(category.path) ||
+                activeDropdown === category.name
+                  ? "text-pink-500 font-semibold bg-pink-50"
+                  : "text-white hover:bg-pink-50/20 hover:text-pink-400"
               }`}
             >
               <Space>
@@ -134,9 +250,10 @@ const Header = () => {
                 <Icon
                   icon="ant-design:down-outlined"
                   className={`text-xs transition-transform duration-300 ${
-                    isCategoryActive(category.path) || activeDropdown === category.name
-                      ? 'text-pink-500 rotate-180'
-                      : 'text-white'
+                    isCategoryActive(category.path) ||
+                    activeDropdown === category.name
+                      ? "text-pink-500 rotate-180"
+                      : "text-white"
                   }`}
                 />
               </Space>
@@ -154,25 +271,32 @@ const Header = () => {
             {isAuthenticated && (
               <Dropdown
                 menu={{ items: profileItems }}
-                trigger={['hover']}
+                trigger={["hover"]}
                 overlayClassName="bg-white rounded-lg shadow-xl border border-gray-100"
               >
                 <div className="flex items-center gap-2 cursor-pointer group">
                   <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-pink-500 group-hover:border-pink-600 transition-all">
                     <img
-                      src={profile?.profileImage ? `http://localhost:5000${profile.profileImage}` : "/img/default-profile.png"}
+                      src={
+                        profile?.profileImage
+                          ? profile.profileImage
+                          : "/img/default-profile.png"
+                      }
                       alt="Profile"
-                      className="object-cover size-full"
+                      className="object-cover w-full h-full"
                     />
                   </div>
                   <span className="text-white font-medium group-hover:text-pink-400 transition-colors">
                     {`${profile?.firstName} ${profile?.lastName}`}
                   </span>
-                  <Icon icon="ant-design:down-outlined" className="text-white group-hover:text-pink-400" />
+                  <Icon
+                    icon="ant-design:down-outlined"
+                    className="text-white group-hover:text-pink-400"
+                  />
                 </div>
               </Dropdown>
             )}
-            {isAuthenticated && userRole === 'user' && (
+            {isAuthenticated && userRole === "user" && (
               <div className="flex items-center gap-4">
                 <Badge count={unreadNotifications} size="small" color="#FF6B6B">
                   <Bell
@@ -239,7 +363,7 @@ const Header = () => {
         open={isMobileMenuOpen}
         width={300}
         className="bg-white"
-        headerStyle={{ borderBottom: '1px solid #e5e7eb' }}
+        headerStyle={{ borderBottom: "1px solid #e5e7eb" }}
         bodyStyle={{ padding: 0 }}
       >
         <div className="flex flex-col h-full">
@@ -247,7 +371,13 @@ const Header = () => {
             <div className="flex items-center gap-3 p-4 border-b border-gray-200">
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-pink-500">
                 <img
-                  src={profile?.profileImage ? `http://localhost:5000${profile.profileImage}` : "/img/default-profile.png"}
+                  src={
+                    profile?.profileImage
+                      ? profile.profileImage.startsWith("http")
+                        ? profile.profileImage
+                        : `http://localhost:5000${profile.profileImage}`
+                      : "/img/default-profile.png"
+                  }
                   alt="Profile"
                   className="object-cover w-full h-full"
                 />
@@ -262,7 +392,9 @@ const Header = () => {
           <div className="flex-1 py-4">
             {navCategories.map((category) => (
               <div key={category.name} className="mb-4">
-                <div className="px-4 mb-2 font-semibold text-gray-900">{category.name}</div>
+                <div className="px-4 mb-2 font-semibold text-gray-900">
+                  {category.name}
+                </div>
                 <div className="space-y-1">
                   {category.items.map((item) => (
                     <NavLink
@@ -274,7 +406,9 @@ const Header = () => {
                       }}
                       className={({ isActive }) =>
                         `block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-500 transition-colors ${
-                          isActive ? 'bg-pink-50 text-pink-500 font-semibold' : ''
+                          isActive
+                            ? "bg-pink-50 text-pink-500 font-semibold"
+                            : ""
                         }`
                       }
                     >
@@ -286,7 +420,7 @@ const Header = () => {
             ))}
           </div>
 
-          {isAuthenticated && userRole === 'user' && (
+          {isAuthenticated && userRole === "user" && (
             <div className="border-t border-gray-200 p-4 space-y-2">
               <NavLink
                 to="/my-orders"

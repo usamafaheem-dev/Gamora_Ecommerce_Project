@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import axios from 'axios';
+import api from '../../utils/api';
 
 const storeUse = create(
   persist(
@@ -88,7 +89,7 @@ const storeUse = create(
       // Fetch notifications from API
       fetchNotifications: async () => {
         try {
-          const response = await axios.get('http://localhost:5000/api/notifications', {
+          const response = await api.get('/notifications', {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
           });
           const notificationsData = Array.isArray(response.data.data) ? response.data.data : [];

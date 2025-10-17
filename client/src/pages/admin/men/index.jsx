@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Empty, Space, Tooltip, Popconfirm, Spin } from 'antd';
-import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { toast } from 'react-toastify';
-import axios from 'axios';
-import { CreateModal, ViewModal } from '../../../components/common';
-import api from '../../../utils/api';
+import React, { useState, useEffect } from "react";
+import { Table, Empty, Space, Tooltip, Popconfirm, Spin } from "antd";
+import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { CreateModal, ViewModal } from "../../../components/common";
+import api from "../../../utils/api";
 
 const Men = () => {
   const [products, setProducts] = useState([]);
   const [editProduct, setEditProduct] = useState(null);
   const [viewProduct, setViewProduct] = useState(null);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const fetchProducts = async () => {
     try {
-      setLoading(true)
-      const response = await api.get('/products');
+      setLoading(true);
+      const response = await api.get("/products");
       setProducts(response.data);
     } catch {
-      toast.error('Error fetching products');
+      toast.error("Error fetching products");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -33,19 +33,21 @@ const Men = () => {
   };
 
   const handleUpdate = (updatedProduct) => {
-    setProducts(products.map(product =>
-      product._id === updatedProduct._id ? updatedProduct : product
-    ));
+    setProducts(
+      products.map((product) =>
+        product._id === updatedProduct._id ? updatedProduct : product
+      )
+    );
     setEditProduct(null);
   };
 
   const handleDelete = async (id) => {
     try {
       await api.delete(`/products/${id}`);
-      setProducts(products.filter(product => product._id !== id));
-      toast.success('Product deleted successfully');
+      setProducts(products.filter((product) => product._id !== id));
+      toast.success("Product deleted successfully");
     } catch {
-      toast.error('Error deleting product');
+      toast.error("Error deleting product");
     }
   };
 
@@ -57,74 +59,87 @@ const Men = () => {
     setViewProduct(null);
   };
 
-  const shirtsData = products.filter(product => product.subcategory === 'Shirts' && product.category === 'Men');
-  const pantsData = products.filter(product => product.subcategory === 'Pants' && product.category === 'Men');
-  const shoesData = products.filter(product => product.subcategory === 'Shoes' && product.category === 'Men');
-
+  const shirtsData = products.filter(
+    (product) => product.subcategory === "Shirts" && product.category === "Men"
+  );
+  const pantsData = products.filter(
+    (product) => product.subcategory === "Pants" && product.category === "Men"
+  );
+  const shoesData = products.filter(
+    (product) => product.subcategory === "Shoes" && product.category === "Men"
+  );
 
   const columns = [
     {
-      title: 'Image',
-      dataIndex: 'images',
-      key: 'images',
+      title: "Image",
+      dataIndex: "images",
+      key: "images",
       render: (images) => (
-        <div className='w-14 h-14'>
+        <div className="w-14 h-14">
           <img
-            src={images && images[0] ? `http://localhost:5000${images[0]}` : 'https://via.placeholder.com/300'}
+            src={
+              images && images[0]
+                ? images[0].startsWith("http")
+                  ? images[0]
+                  : `http://localhost:5000${images[0]}`
+                : "https://via.placeholder.com/300"
+            }
             alt="product"
-            className='size-full rounded-md object-cover'
-            onError={(e) => { e.target.src = 'https://via.placeholder.com/300' }}
+            className="size-full rounded-md object-cover"
+            onError={(e) => {
+              e.target.src = "https://via.placeholder.com/300";
+            }}
           />
         </div>
       ),
     },
     {
-      title: 'Id',
-      dataIndex: '_id',
-      key: '_id',
+      title: "Id",
+      dataIndex: "_id",
+      key: "_id",
       width: 100,
-      className: 'center-column',
+      className: "center-column",
       render: (id) => id.slice(-6),
     },
     {
-      title: 'Product Name',
-      dataIndex: 'name',
-      key: 'name',
-      className: 'center-column',
+      title: "Product Name",
+      dataIndex: "name",
+      key: "name",
+      className: "center-column",
     },
     {
-      title: 'Stock',
-      dataIndex: 'stock',
-      key: 'stock',
-      className: 'center-column',
-      render: (stock) => stock || 'N/A',
+      title: "Stock",
+      dataIndex: "stock",
+      key: "stock",
+      className: "center-column",
+      render: (stock) => stock || "N/A",
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
-      className: 'center-column',
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
+      className: "center-column",
     },
     {
-      title: 'Subcategory',
-      dataIndex: 'subcategory',
-      key: 'subcategory',
-      className: 'center-column',
+      title: "Subcategory",
+      dataIndex: "subcategory",
+      key: "subcategory",
+      className: "center-column",
     },
     {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
-      className: 'center-column',
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      className: "center-column",
       render: (price) => `Rs.${Number(price).toFixed(2)}`,
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-      className: 'center-column',
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      className: "center-column",
       render: (description) => (
-        <div className='flex flex-col text-center items-center h-full justify-center'>
+        <div className="flex flex-col text-center items-center h-full justify-center">
           <Tooltip title={description} placement="topLeft">
             <div className="truncate">{description}</div>
           </Tooltip>
@@ -132,23 +147,25 @@ const Men = () => {
       ),
     },
     {
-      title: 'Sizes',
-      dataIndex: 'sizes',
-      key: 'sizes',
-      className: 'center-column',
-      render: (sizes) => (sizes && sizes.length > 0 ? sizes.join(', ') : 'N/A'),
+      title: "Sizes",
+      dataIndex: "sizes",
+      key: "sizes",
+      className: "center-column",
+      render: (sizes) => (sizes && sizes.length > 0 ? sizes.join(", ") : "N/A"),
     },
     {
-      title: 'Avg Rating',
-      key: 'reviewAvg',
-      className: 'center-column',
+      title: "Avg Rating",
+      key: "reviewAvg",
+      className: "center-column",
       render: (_, record) => (
         <span>
           {record.reviewCount > 0 ? (
             <>
               <div className="flex items-center justify-center ">
-                <span className="mr-1">{Number(record.reviewAvg).toFixed(1)}</span>
-                <span role="img" aria-label="star" className=' text-amber-500' >
+                <span className="mr-1">
+                  {Number(record.reviewAvg).toFixed(1)}
+                </span>
+                <span role="img" aria-label="star" className=" text-amber-500">
                   <iconify-icon icon="mingcute:star-fill"></iconify-icon>
                 </span>
               </div>
@@ -161,17 +178,15 @@ const Men = () => {
     },
 
     {
-      title: 'Reviews',
-      key: 'reviewCount',
-      className: 'center-column',
-      render: (_, record) => (
-        <span>{record.reviewCount}</span>
-      ),
+      title: "Reviews",
+      key: "reviewCount",
+      className: "center-column",
+      render: (_, record) => <span>{record.reviewCount}</span>,
     },
     {
-      title: 'Actions',
-      key: 'actions',
-      className: 'center-column',
+      title: "Actions",
+      key: "actions",
+      className: "center-column",
       render: (_, record) => (
         <Space size="middle">
           <EyeOutlined
@@ -225,9 +240,8 @@ const Men = () => {
             dataSource={shirtsData}
             rowKey="_id"
             pagination={{ pageSize: 5 }}
-            className=' overflow-x-auto'
-            scroll={{ x: 'max-content' }}
-
+            className=" overflow-x-auto"
+            scroll={{ x: "max-content" }}
           />
         </div>
       )}
@@ -246,8 +260,7 @@ const Men = () => {
             className="customs-table  overflow-x-auto "
             rowClassName={() => "custom-row"}
             pagination={{ pageSize: 5 }}
-            scroll={{ x: 'max-content' }}
-
+            scroll={{ x: "max-content" }}
           />
         </div>
       )}
@@ -266,8 +279,7 @@ const Men = () => {
             className="customs-table  overflow-x-auto "
             rowClassName={() => "custom-row"}
             pagination={{ pageSize: 5 }}
-            scroll={{ x: 'max-content' }}
-
+            scroll={{ x: "max-content" }}
           />
         </div>
       )}

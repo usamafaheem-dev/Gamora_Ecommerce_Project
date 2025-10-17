@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import StoreUse from '../Store/StoreUse'; // Adjust the path as needed
+import api from '../../utils/api';
 
 const { Text, Title } = Typography;
 
@@ -23,8 +24,8 @@ const NotificationCenter = () => {
 
   const handleNotificationClick = async (notification) => {
     try {
-      await axios.put(
-        `http://localhost:5000/api/notifications/${notification._id}/read`,
+      await api.put(
+        `/notifications/${notification._id}/read`,
         {},
         {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -58,8 +59,8 @@ const NotificationCenter = () => {
 
   const handleMarkAllAsRead = async () => {
     try {
-      await axios.put(
-        'http://localhost:5000/api/notifications/mark-all-read',
+      await api.put(
+        '/notifications/mark-all-read',
         {},
         {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -76,7 +77,7 @@ const NotificationCenter = () => {
   const handleDismissNotification = async (notificationId, e) => {
     e.stopPropagation();
     try {
-      await axios.delete(`http://localhost:5000/api/notifications/${notificationId}`, {
+      await api.delete(`/notifications/${notificationId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       removeNotification(notificationId);

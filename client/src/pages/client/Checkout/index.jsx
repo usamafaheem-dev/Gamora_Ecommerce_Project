@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
-import { Layout, Form, Input, Button, Select, Divider, Radio, Card, message, Spin } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import { StoreUse, StripePaymentForm } from '../../../components';
-import { ordersAPI } from '../../../utils/api';
+import React, { useState } from "react";
+import {
+  Layout,
+  Form,
+  Input,
+  Button,
+  Select,
+  Divider,
+  Radio,
+  Card,
+  message,
+  Spin,
+} from "antd";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { StoreUse, StripePaymentForm } from "../../../components";
+import { ordersAPI } from "../../../utils/api";
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -11,19 +22,19 @@ const { Option } = Select;
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const { cart, getCartTotal, clearCart, user } = StoreUse();
-  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [paymentMethod, setPaymentMethod] = useState("card");
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
   // Calculate totals
   const subtotal = getCartTotal();
-  const shipping = subtotal > 100 ? 0 : 10.00;
+  const shipping = subtotal > 100 ? 0 : 10.0;
   const tax = subtotal * 0.1;
   const total = subtotal + shipping + tax;
 
   const handleSubmit = async (values) => {
     if (cart.length === 0) {
-      message.error('Your cart is empty');
+      message.error("Your cart is empty");
       return;
     }
 
@@ -31,13 +42,13 @@ const CheckoutPage = () => {
       setLoading(true);
 
       const orderData = {
-        items: cart.map(item => ({
+        items: cart.map((item) => ({
           productId: item._id,
           name: item.name,
           price: item.price,
           quantity: item.quantity || 1,
           size: item.selectedSize || item.sizes[0],
-          image: item.images[0]
+          image: item.images[0],
         })),
         shippingAddress: {
           firstName: values.firstName,
@@ -48,34 +59,34 @@ const CheckoutPage = () => {
           apartment: values.apartment,
           city: values.city,
           state: values.state,
-          zipCode: values.zipCode
+          zipCode: values.zipCode,
         },
         paymentMethod,
         subtotal,
         shipping,
         tax,
         total,
-        status: 'pending'
+        status: "pending",
       };
 
-      if (paymentMethod === 'cod') {
+      if (paymentMethod === "cod") {
         // For COD, create order directly
         const response = await ordersAPI.create(orderData);
         if (response.data) {
           clearCart();
-          message.success('Order placed successfully!');
-          navigate('/order-confirmation', {
+          message.success("Order placed successfully!");
+          navigate("/order-confirmation", {
             state: {
               orderId: response.data._id,
-              orderData: response.data
-            }
+              orderData: response.data,
+            },
           });
         }
       }
       // For card payment, the StripePaymentForm will handle the order creation
     } catch (error) {
-      console.error('Order creation error:', error);
-      message.error('Failed to place order. Please try again.');
+      console.error("Order creation error:", error);
+      message.error("Failed to place order. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -85,13 +96,13 @@ const CheckoutPage = () => {
     try {
       const values = form.getFieldsValue();
       const orderData = {
-        items: cart.map(item => ({
+        items: cart.map((item) => ({
           productId: item._id,
           name: item.name,
           price: item.price,
           quantity: item.quantity || 1,
           size: item.selectedSize || item.sizes[0],
-          image: item.images[0]
+          image: item.images[0],
         })),
         shippingAddress: {
           firstName: values.firstName,
@@ -102,37 +113,39 @@ const CheckoutPage = () => {
           apartment: values.apartment,
           city: values.city,
           state: values.state,
-          zipCode: values.zipCode
+          zipCode: values.zipCode,
         },
-        paymentMethod: 'card',
+        paymentMethod: "card",
         paymentIntentId: paymentIntent.id,
         subtotal,
         shipping,
         tax,
         total,
-        status: 'confirmed'
+        status: "confirmed",
       };
 
       const response = await ordersAPI.create(orderData);
       if (response.data) {
         clearCart();
-        message.success('Payment successful! Order placed.');
-        navigate('/order-confirmation', {
+        message.success("Payment successful! Order placed.");
+        navigate("/order-confirmation", {
           state: {
             orderId: response.data._id,
-            orderData: response.data
-          }
+            orderData: response.data,
+          },
         });
       }
     } catch (error) {
-      console.error('Order creation after payment error:', error);
-      message.error('Payment succeeded but order creation failed. Please contact support.');
+      console.error("Order creation after payment error:", error);
+      message.error(
+        "Payment succeeded but order creation failed. Please contact support."
+      );
     }
   };
 
   const handleStripeError = (error) => {
-    console.error('Stripe payment error:', error);
-    message.error('Payment failed. Please try again.');
+    console.error("Stripe payment error:", error);
+    message.error("Payment failed. Please try again.");
   };
 
   if (cart.length === 0) {
@@ -140,12 +153,16 @@ const CheckoutPage = () => {
       <Layout className="min-h-screen bg-gray-50">
         <Content className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
           <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
-            <p className="text-gray-600 mb-6">Add some items to your cart to proceed with checkout.</p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Your cart is empty
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Add some items to your cart to proceed with checkout.
+            </p>
             <Button
               type="primary"
               size="large"
-              onClick={() => navigate('/men/shirts')}
+              onClick={() => navigate("/men/shirts")}
               className="bg-[#0F172A]"
             >
               Continue Shopping
@@ -182,7 +199,7 @@ const CheckoutPage = () => {
               onFinish={handleSubmit}
               className="space-y-6"
               initialValues={{
-                email: user?.email || ''
+                email: user?.email || "",
               }}
             >
               {/* Contact Information */}
@@ -191,8 +208,8 @@ const CheckoutPage = () => {
                   name="email"
                   label="Email"
                   rules={[
-                    { required: true, message: 'Please enter your email' },
-                    { type: 'email', message: 'Please enter a valid email' }
+                    { required: true, message: "Please enter your email" },
+                    { type: "email", message: "Please enter a valid email" },
                   ]}
                 >
                   <Input />
@@ -200,7 +217,12 @@ const CheckoutPage = () => {
                 <Form.Item
                   name="phone"
                   label="Phone"
-                  rules={[{ required: true, message: 'Please enter your phone number' }]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter your phone number",
+                    },
+                  ]}
                 >
                   <Input />
                 </Form.Item>
@@ -212,14 +234,14 @@ const CheckoutPage = () => {
                   <Form.Item
                     name="firstName"
                     label="First Name"
-                    rules={[{ required: true, message: 'Required' }]}
+                    rules={[{ required: true, message: "Required" }]}
                   >
                     <Input />
                   </Form.Item>
                   <Form.Item
                     name="lastName"
                     label="Last Name"
-                    rules={[{ required: true, message: 'Required' }]}
+                    rules={[{ required: true, message: "Required" }]}
                   >
                     <Input />
                   </Form.Item>
@@ -227,7 +249,7 @@ const CheckoutPage = () => {
                 <Form.Item
                   name="address"
                   label="Street Address"
-                  rules={[{ required: true, message: 'Required' }]}
+                  rules={[{ required: true, message: "Required" }]}
                 >
                   <Input />
                 </Form.Item>
@@ -241,29 +263,39 @@ const CheckoutPage = () => {
                   <Form.Item
                     name="city"
                     label="City"
-                    rules={[{ required: true, message: 'Required' }]}
+                    rules={[{ required: true, message: "Required" }]}
                   >
                     <Input />
                   </Form.Item>
                   <Form.Item
                     name="state"
                     label="State"
-                    rules={[{ required: true, message: 'Required' }]}
+                    rules={[{ required: true, message: "Required" }]}
                   >
-                    <Select showSearch placeholder="Select province" className='state-select' >
+                    <Select
+                      showSearch
+                      placeholder="Select province"
+                      className="state-select"
+                    >
                       <Option value="Punjab">Punjab</Option>
                       <Option value="Sindh">Sindh</Option>
-                      <Option value="Khyber Pakhtunkhwa">Khyber Pakhtunkhwa</Option>
+                      <Option value="Khyber Pakhtunkhwa">
+                        Khyber Pakhtunkhwa
+                      </Option>
                       <Option value="Balochistan">Balochistan</Option>
-                      <Option value="Islamabad Capital Territory">Islamabad Capital Territory</Option>
+                      <Option value="Islamabad Capital Territory">
+                        Islamabad Capital Territory
+                      </Option>
                       <Option value="Gilgit-Baltistan">Gilgit-Baltistan</Option>
-                      <Option value="Azad Jammu and Kashmir">Azad Jammu and Kashmir</Option>
+                      <Option value="Azad Jammu and Kashmir">
+                        Azad Jammu and Kashmir
+                      </Option>
                     </Select>
                   </Form.Item>
                   <Form.Item
                     name="zipCode"
                     label="ZIP Code"
-                    rules={[{ required: true, message: 'Required' }]}
+                    rules={[{ required: true, message: "Required" }]}
                   >
                     <Input />
                   </Form.Item>
@@ -282,15 +314,21 @@ const CheckoutPage = () => {
                       <div className="flex justify-between items-center w-full">
                         <span>Credit/Debit Card</span>
                         <div className="flex gap-2">
-                          <span className="text-xs bg-blue-100 px-2 py-1 rounded">VISA</span>
-                          <span className="text-xs bg-red-100 px-2 py-1 rounded">MC</span>
+                          <span className="text-xs bg-blue-100 px-2 py-1 rounded">
+                            VISA
+                          </span>
+                          <span className="text-xs bg-red-100 px-2 py-1 rounded">
+                            MC
+                          </span>
                         </div>
                       </div>
                     </Radio>
                     <Radio value="paypal" className="w-full">
                       <div className="flex justify-between items-center w-full">
                         <span>PayPal</span>
-                        <span className="text-xs bg-blue-100 px-2 py-1 rounded">PayPal</span>
+                        <span className="text-xs bg-blue-100 px-2 py-1 rounded">
+                          PayPal
+                        </span>
                       </div>
                     </Radio>
                     <Radio value="cod" className="w-full">
@@ -299,7 +337,7 @@ const CheckoutPage = () => {
                   </div>
                 </Radio.Group>
 
-                {paymentMethod === 'card' && (
+                {paymentMethod === "card" && (
                   <div className="mt-4">
                     <StripePaymentForm
                       amount={total}
@@ -310,7 +348,7 @@ const CheckoutPage = () => {
                   </div>
                 )}
 
-                {paymentMethod === 'cod' && (
+                {paymentMethod === "cod" && (
                   <Button
                     type="primary"
                     size="large"
@@ -318,11 +356,12 @@ const CheckoutPage = () => {
                     loading={loading}
                     className="w-full bg-[#0F172A] hover:bg-[#1E293B] h-12 text-lg mt-4"
                   >
-                    {loading ? 'Processing...' : `Place Order - Rs: ${total.toFixed(2)}`}
+                    {loading
+                      ? "Processing..."
+                      : `Place Order - Rs: ${total.toFixed(2)}`}
                   </Button>
                 )}
               </Card>
-
             </Form>
           </div>
 
@@ -333,14 +372,16 @@ const CheckoutPage = () => {
                 {cart.map((item) => (
                   <div key={item._id} className="flex gap-4">
                     <img
-                      src={`http://localhost:5000${item.images[0]}`}
+                      src={item.images[0] || "https://via.placeholder.com/150"} // Cloudinary URL already full
                       alt={item.name}
                       className="w-20 h-20 object-cover rounded"
                     />
+
                     <div className="flex-grow">
                       <h4 className="font-medium">{item.name}</h4>
                       <div className="text-sm text-gray-500">
-                        Size: {item.selectedSize || item.sizes[0]} | Qty: {item.quantity || 1}
+                        Size: {item.selectedSize || item.sizes[0]} | Qty:{" "}
+                        {item.quantity || 1}
                       </div>
                       <div className="font-medium">
                         Rs: {(item.price * (item.quantity || 1)).toFixed(2)}
@@ -358,7 +399,9 @@ const CheckoutPage = () => {
                   </div>
                   <div className="flex justify-between">
                     <span>Shipping</span>
-                    <span>{shipping === 0 ? 'Free' : `Rs: ${shipping.toFixed(2)}`}</span>
+                    <span>
+                      {shipping === 0 ? "Free" : `Rs: ${shipping.toFixed(2)}`}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Tax</span>
