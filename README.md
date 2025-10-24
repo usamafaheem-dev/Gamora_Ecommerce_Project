@@ -140,7 +140,5 @@ Deployment-ready full stack project
 👤 Usama Faheem
 💼 GitHub: usamafaheem-dev
 
-🔗 LinkedIn: (Add your LinkedIn profile link here)
-📧 Email: (Optional)
 
 
