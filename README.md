@@ -1,144 +1,106 @@
 # Gamora Ecommerce Project
 
-**Full-Stack MERN Ecommerce Application**  
-Built with **React · Node.js · Express · MongoDB** to deliver a modern, feature-rich shopping experience.
+Gamora is a full-stack MERN ecommerce application with customer and admin flows, order management, reviews, wallet handling, notifications, and Stripe-based payments.
 
----
+## Tech Stack
+- **Frontend:** React (Vite), React Router, Tailwind CSS, Ant Design
+- **Backend:** Node.js, Express
+- **Database:** MongoDB (Mongoose)
+- **Other:** JWT auth, Cloudinary uploads, Stripe payments
 
-## 🚀 Features
+## Project Structure
+```text
+Gamora_Ecommerce_Project/
+├── client/   # React frontend
+├── server/   # Express backend API
+└── build/    # Generated frontend build output
+```
 
-- User authentication & authorization (register / login)  
-- Product listing, search, filtering & categories  
-- Product details page with reviews & ratings  
-- Shopping cart & checkout integration  
-- Order history & user dashboard  
-- Admin panel for product / order management (if applicable)  
-- Responsive UI (desktop + mobile)  
-- RESTful API with error handling & security (CORS, Helmet, etc.)  
+## Key Features
+- User signup/login with JWT authentication
+- Product listing, details, category filtering, and search flows
+- Cart, checkout, and order placement
+- Order tracking and order history
+- Product reviews and ratings
+- Admin dashboard routes for management workflows
+- Wallet and notification APIs
+- Stripe payment intent + confirmation handling
 
----
+## Backend API Modules
+The server mounts these route groups:
+- `/api/auth`
+- `/api/profile`
+- `/api/products`
+- `/api/orders`
+- `/api/payments`
+- `/api/notifications`
+- `/api/admin`
+- `/api/reviews`
+- `/api/wallet`
 
-## 🧰 Tech Stack
+## Prerequisites
+- Node.js (LTS recommended)
+- npm
+- MongoDB connection string
 
-| Frontend           | Backend                    | Database    |
-|--------------------|----------------------------|-------------|
-| React              | Node.js + Express.js       | MongoDB      |
-| React Router       | REST API Endpoints         | Mongoose     |
-| Redux (optional)   | Helmet, CORS, Middleware   |             |
+## Local Setup
 
----
-
-## 📁 Folder Structure
-
-/
-├── client/ # React application
-│ ├── src/
-│ └── public/
-├── server/ # Express backend
-│ ├── routes/
-│ ├── controllers/
-│ ├── models/
-│ ├── middleware/
-│ └── config/
-└── README.md
-
-
----
-
-## 🛠️ Installation & Setup
-
-### Prerequisites  
-- Node.js & npm installed  
-- MongoDB database (local or hosted)  
-- (Optional) Stripe or payment gateway if used  
-
-### Clone the repo  
+### 1) Clone repository
 ```bash
 git clone https://github.com/usamafaheem-dev/Gamora_Ecommerce_Project.git
+cd Gamora_Ecommerce_Project
+```
 
-
-2️⃣ Setup Backend
+### 2) Setup backend
+```bash
 cd server
 npm install
+```
 
-
-Create a .env file inside the server folder and add your credentials:
-
+Create `/server/.env`:
+```env
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
+MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
-CLOUDINARY_NAME=your_cloudinary_name (if used)
-CLOUDINARY_API_KEY=your_api_key (if used)
-CLOUDINARY_API_SECRET=your_api_secret (if used)
+JWT_EXPIRES_IN=1d
+STRIPE_SECRET_KEY=your_stripe_secret_key
+STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+```
 
-
-Start the backend:
-
+Start backend:
+```bash
 npm run dev
+```
 
-
-Server will run at ➜ http://localhost:5000
-
-3️⃣ Setup Frontend
+### 3) Setup frontend
+```bash
 cd ../client
 npm install
-npm start
+npm run dev
+```
 
+Frontend default URL (Vite): `http://localhost:5173`
 
-React app will run at ➜ http://localhost:3000
+## Available Scripts
 
-📡 API Endpoints (Sample)
-Method	Endpoint	Description
-POST	/api/users/register	Register new user
-POST	/api/users/login	Login user
-GET	/api/products	Fetch all products
-GET	/api/products/:id	Fetch single product
-POST	/api/orders	Create new order
-GET	/api/orders/:id	Get order details
-PUT	/api/orders/:id/pay	Update order payment status
-🧮 Environment Variables
+### Client (`/client`)
+- `npm run dev` - Start development server
+- `npm run build` - Create production build
+- `npm run lint` - Run ESLint
+- `npm run preview` - Preview production build
 
-Create .env inside the server folder with:
+### Server (`/server`)
+- `npm run dev` - Start server with nodemon
+- `npm start` - Start server with node
+- `npm run seed` - Seed admin data
 
-PORT=5000
-MONGO_URI=<your_mongo_db_connection_string>
-JWT_SECRET=<your_secret_key>
-NODE_ENV=development
+## Notes
+- Client API base URL is currently configured in `client/src/utils/api.js`.
+- Ensure backend URL configuration matches your local/deployment environment.
 
-
-(If using third-party services like Cloudinary or Stripe, include their keys too.)
-
-🎨 UI Screenshots
-
-(Add your project screenshots here)
-
-Example:
-
-![Home Page](./screenshots/home.png)
-![Product Page](./screenshots/product.png)
-![Cart Page](./screenshots/cart.png)
-
-🌐 Live Demo
-
-🔗 Visit Live Site
- (Replace with your Netlify or Vercel link)
-
-💡 Key Learning Highlights
-
-Full MERN stack integration (React + Node + MongoDB)
-
-RESTful API design and modular backend architecture
-
-Secure JWT authentication system
-
-State management using React Hooks or Redux
-
-Deployment-ready full stack project
-
-🧑‍💻 Author
-
-👤 Usama Faheem
-💼 GitHub: usamafaheem-dev
-
-
-
+## Author
+- **Usama Faheem**
+- GitHub: [@usamafaheem-dev](https://github.com/usamafaheem-dev)
